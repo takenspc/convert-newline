@@ -21,6 +21,6 @@ end_of_line = cr
 [crlf.txt]
 end_of_line = crlf
 
-[*.yml]
+[*.{yml,json}]
 indent_style = space
-indent_size = 4
+indent_size = 2
