@@ -18,5 +18,8 @@
     "iconv-lite": "^0.4.8",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4"
+  },
+  "engines": {
+    "iojs" : "2.0.x"
   }
 }
