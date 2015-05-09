@@ -133,7 +133,7 @@ describe("crlf", function() {
 	describe("stream (utf8)", function() {
 		function testStream(key1, key2, reference, done) {
 			var originalFilename = "data/utf8/" + key2 + ".txt";
-			var targetFilename = originalFilename + "." + key1 + ".txt";
+			var targetFilename = originalFilename + "." + key1;
 			var options = {
 				encoding: UTF8
 			};
@@ -163,7 +163,7 @@ describe("crlf", function() {
 	describe("stream (shift_jis)", function() {
 		function testStream(key1, key2, reference, done) {
 			var originalFilename = "data/shift_jis/" + key2 + ".txt";
-			var targetFilename = originalFilename + "." + key1 + ".txt";
+			var targetFilename = originalFilename + "." + key1;
 			var reader = fs.createReadStream(originalFilename);
 			var writer = fs.createWriteStream(targetFilename);
 			var converter = convertNewline(key1).stream();
