@@ -6,10 +6,17 @@
   "author": "Takeshi Kurosawa <taken.spc@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "coverage": "istanbul cover --report html node_modules/mocha/bin/_mocha -- test.js -R spec",
     "test": "eslint . && mocha test.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takenspc/convert-newline.git"
+  },
   "devDependencies": {
+    "eslint": "^0.20.0",
     "iconv-lite": "^0.4.8",
+    "istanbul": "^0.3.13",
     "mocha": "^2.2.4"
   }
 }
