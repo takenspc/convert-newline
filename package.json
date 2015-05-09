@@ -1,6 +1,6 @@
 {
   "name": "convert-newline",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Convert newlines to specifc one",
   "homepage": "https://github.com/takenspc/convert-newline/",
   "author": "Takeshi Kurosawa <taken.spc@gmail.com>",
@@ -13,9 +13,11 @@
     "type": "git",
     "url": "https://github.com/takenspc/convert-newline.git"
   },
+  "dependencies": {
+    "iconv-lite": "^0.4.8"
+  },
   "devDependencies": {
     "eslint": "^0.20.0",
-    "iconv-lite": "^0.4.8",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4"
   },
