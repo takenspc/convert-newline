@@ -16,10 +16,10 @@
     "url": "https://github.com/takenspc/convert-newline.git"
   },
   "dependencies": {
-    "coveralls": "^2.11.2",
     "iconv-lite": "^0.4.8"
   },
   "devDependencies": {
+    "coveralls": "^2.11.2",
     "eslint": "^0.20.0",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4"
