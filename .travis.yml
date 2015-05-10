@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "iojs"
 
-befoer_script:
+before_script:
   - "npm run lint"
 
 script:
