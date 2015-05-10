@@ -1,7 +1,7 @@
 {
   "name": "convert-newline",
-  "version": "0.0.2",
-  "description": "Convert newlines to specifc one",
+  "version": "0.0.3",
+  "description": "Unify newline characters to either \\n, \\r\\n, or \\r.",
   "homepage": "https://github.com/takenspc/convert-newline/",
   "author": "Takeshi Kurosawa <taken.spc@gmail.com>",
   "license": "MIT",
