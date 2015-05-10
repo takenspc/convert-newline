@@ -1,5 +1,8 @@
 # convert-newline
 
+[![Build Status](https://travis-ci.org/takenspc/convert-newline.svg?branch=master)](https://travis-ci.org/takenspc/convert-newline)
+[![Coverage Status](https://coveralls.io/repos/takenspc/convert-newline/badge.svg?branch=master)](https://coveralls.io/r/takenspc/convert-newline?branch=master)
+
 Unify newline characters to either `\n`,`\r\n`, or `\r`.
 
 ## Usage
