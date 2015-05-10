@@ -1,12 +1,15 @@
 "use strict";
 var assert = require("assert");
 var fs = require("fs");
+var path = require("path");
+var util = require("util");
 var iconv = require("iconv-lite");
 var convertNewline = require("./");
 
 //
 // const.
 //
+var PACKAGE_NAME = "convert-newline";
 var UTF8 = "utf8";
 var SHIFT_JIS = "shift_jis";
 
@@ -23,9 +26,9 @@ function getStringTestData() {
 
 function getUTF8FileTestData() {
 	return {
-		cr: fs.readFileSync("data/utf8/cr.txt"),
-		crlf: fs.readFileSync("data/utf8/crlf.txt"),
-		lf: fs.readFileSync("data/utf8/lf.txt")
+		cr: fs.readFileSync(path.join("data", UTF8, "cr.txt")),
+		crlf: fs.readFileSync(path.join("data", UTF8, "crlf.txt")),
+		lf: fs.readFileSync(path.join("data", UTF8, "lf.txt"))
 	};
 
 }
@@ -40,9 +43,9 @@ function getUTF8BufferTestData() {
 
 function getShiftJISFileTestData() {
 	return {
-		cr: fs.readFileSync("data/shift_jis/cr.txt"),
-		crlf: fs.readFileSync("data/shift_jis/crlf.txt"),
-		lf: fs.readFileSync("data/shift_jis/lf.txt")
+		cr: fs.readFileSync(path.join("data", SHIFT_JIS, "cr.txt")),
+		crlf: fs.readFileSync(path.join("data", SHIFT_JIS, "crlf.txt")),
+		lf: fs.readFileSync(path.join("data", SHIFT_JIS, "lf.txt"))
 	};
 }
 
@@ -64,126 +67,149 @@ function getShiftJISBufferTestData() {
 //
 // Tests
 //
-describe("crlf", function() {
-	it("string", function() {
-		var data = getStringTestData();
-		var keys = Object.keys(data);
-		keys.forEach(function(key1) {
-			var converter = convertNewline(key1).string();
-			var reference = data[key1];
-			keys.forEach(function(key2) {
-				assert.strictEqual(converter(data[key2]), reference, key2 + " were converted to " + key1);
-			});
-		});
-	});
-
-	it("buffer (simple)", function() {
-		var data = getUTF8BufferTestData();
-		var keys = Object.keys(data);
-		keys.forEach(function(key1) {
-			var converter = convertNewline(key1).buffer();
-			var reference = data[key1];
-			keys.forEach(function(key2) {
-				assert.ok(reference.equals(converter(data[key2])), key2 + " were converted to " + key1);
-			});
-		});
-	});
-
-	describe("buffer (iconv)", function() {
-		var data = getShiftJISBufferTestData();
-		var keys = Object.keys(data);
-		keys.forEach(function(key1) {
-			var converter = convertNewline(key1, SHIFT_JIS).buffer();
-			var reference = data[key1];
-			keys.forEach(function(key2) {
-				assert.ok(reference.equals(converter(data[key2])), key2 + " were converted to " + key1);
-			});
-		});
-	});
-
-	it("load test data (utf8)", function() {
-		var filedata = getUTF8FileTestData();
-		var bufferdata = getUTF8FileTestData();
-		var keys = Object.keys(filedata);
-		keys.forEach(function(key1) {
-			var reference = bufferdata[key1];
-			assert.ok(reference.equals(filedata[key1]), key1 + ".txt is loaded correctly");
-			keys.forEach(function(key2) {
-				if (key1 !== key2) {
-					assert.ok(!reference.equals(filedata[key2]), key1 + ".txt is not same as " + key2 + ".txt");
-				}
-			});
-		});
-	});
-
-	it("load test data (shift_jis)", function() {
-		var filedata = getShiftJISFileTestData();
-		var bufferdata = getShiftJISBufferTestData();
-		var keys = Object.keys(filedata);
-		keys.forEach(function(key1) {
-			assert.ok(bufferdata[key1].equals(filedata[key1]), key1 + ".txt is loaded correctly");
-			keys.forEach(function(key2) {
-				if (key1 !== key2) {
-					assert.ok(!filedata[key1].equals(filedata[key2]), key1 + ".txt is not same as " + key2 + ".txt");
-				}
-			});
-		});
-	});
-
-	describe("stream (utf8)", function() {
-		function testStream(key1, key2, reference, done) {
-			var originalFilename = "data/utf8/" + key2 + ".txt";
-			var targetFilename = originalFilename + "." + key1;
-			var options = {
-				encoding: UTF8
-			};
-			var reader = fs.createReadStream(originalFilename, options);
-			var writer = fs.createWriteStream(targetFilename);
-			var converter = convertNewline(key1).stream();
-			writer.on("finish", function() {
-				var target = fs.readFileSync(targetFilename);
-				assert.ok(reference.equals(target), key2 + " were converted to " + key1);
-				done();
-			});
-			reader
-				.pipe(converter)
-				.pipe(writer);
-		}
-		var references = getUTF8BufferTestData();
-		var keys = Object.keys(references);
-		keys.forEach(function (key1) {
-			keys.forEach(function(key2) {
-				it("Convert " + key2 + " to " + key1, function(done) {
-					testStream(key1, key2, references[key1], done);
+describe(PACKAGE_NAME, function() {
+	describe("in string mode", function() {
+		var testData = getStringTestData();
+		var newlinews = Object.keys(testData);
+		newlinews.forEach(function(toNewline) {
+			newlinews.forEach(function(fromNewline) {
+				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
+					var converter = convertNewline(toNewline).string();
+					var reference = testData[toNewline];
+					assert.strictEqual(converter(testData[fromNewline]), reference);
 				});
 			});
 		});
 	});
 
-	describe("stream (shift_jis)", function() {
-		function testStream(key1, key2, reference, done) {
-			var originalFilename = "data/shift_jis/" + key2 + ".txt";
-			var targetFilename = originalFilename + "." + key1;
-			var reader = fs.createReadStream(originalFilename);
+	describe("in buffer mode (simple)", function() {
+		var testData = getUTF8BufferTestData();
+		var newlines = Object.keys(testData);
+		newlines.forEach(function(toNewline) {
+			newlines.forEach(function(fromNewline) {
+				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
+					var converter = convertNewline(toNewline).buffer();
+					var reference = testData[toNewline];
+					assert.ok(reference.equals(converter(testData[fromNewline])));
+				});
+			});
+		});
+	});
+
+	describe("in buffer mode (iconv)", function() {
+		var testData = getShiftJISBufferTestData();
+		var newlines = Object.keys(testData);
+		newlines.forEach(function(toNewline) {
+			newlines.forEach(function(fromNewline) {
+				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
+					var converter = convertNewline(toNewline, SHIFT_JIS).buffer();
+					var reference = testData[toNewline];
+					assert.ok(reference.equals(converter(testData[fromNewline])));
+				});
+			});
+		});
+	});
+
+	describe("test code (utf8)", function() {
+		var testData = getUTF8FileTestData();
+		var referenceData = getUTF8BufferTestData();
+		var newlines = Object.keys(testData);
+		newlines.forEach(function(newline1) {
+			it("should load test data correctly", function() {
+				newlines.forEach(function (newline2) {
+					var target = testData[newline2];
+					var reference = referenceData[newline1];
+					if (newline1 === newline2) {
+						assert.ok(reference.equals(target), util.format("%s test data is loaded correctly", newline1));
+					} else {
+						assert.ok(!reference.equals(target), util.format("%s test data is not same as %s correctly", newline1, newline2));
+					}
+				});
+			});
+		});
+	});
+
+	describe("test code (utf8)", function() {
+		var testData = getShiftJISFileTestData();
+		var referenceData = getShiftJISBufferTestData();
+		var newlines = Object.keys(testData);
+		newlines.forEach(function(newline1) {
+			it("should load test data correctly", function() {
+				newlines.forEach(function (newline2) {
+					var target = testData[newline2];
+					var reference = referenceData[newline1];
+					if (newline1 === newline2) {
+						assert.ok(reference.equals(target), util.format("%s test data is loaded correctly", newline1));
+					} else {
+						assert.ok(!reference.equals(target), util.format("%s test data is not same as %s correctly", newline1, newline2));
+					}
+				});
+			});
+		});
+	});
+
+	describe("in stream mode (simple)", function() {
+		function testStream(toNewline, fromNewline, reference, done) {
+			var fromFilename = path.join("data", UTF8, fromNewline + ".txt");
+			var targetFilename = fromFilename + "." + toNewline;
+			var options = {
+				encoding: UTF8
+			};
+
+			var reader = fs.createReadStream(fromFilename, options);
 			var writer = fs.createWriteStream(targetFilename);
-			var converter = convertNewline(key1).stream();
+			var converter = convertNewline(toNewline).stream();
+
 			writer.on("finish", function() {
 				var target = fs.readFileSync(targetFilename);
-				assert.ok(reference.equals(target), key2 + " were converted to " + key1);
+				assert.ok(reference.equals(target));
 				done();
 			});
+
+			reader
+				.pipe(converter)
+				.pipe(writer);
+		}
+
+		var references = getUTF8BufferTestData();
+		var newlines = Object.keys(references);
+		newlines.forEach(function (toNewline) {
+			newlines.forEach(function(fromNewline) {
+				it(util.format("should convert from %s to %s", fromNewline, toNewline), function(done) {
+					testStream(toNewline, fromNewline, references[toNewline], done);
+				});
+			});
+		});
+	});
+
+	describe("in stream mode (iconv)", function() {
+		function testStream(toNewline, fromNewline, reference, done) {
+			var fromFilename = path.join("data", SHIFT_JIS, fromNewline + ".txt");
+			var targetFilename = fromFilename + "." + toNewline;
+
+			var reader = fs.createReadStream(fromFilename);
+			var writer = fs.createWriteStream(targetFilename);
+			var converter = convertNewline(toNewline).stream();
+
+			writer.on("finish", function() {
+				var target = fs.readFileSync(targetFilename);
+				assert.ok(reference.equals(target));
+				done();
+			});
+
 			reader
 				.pipe(iconv.decodeStream(SHIFT_JIS))
 				.pipe(converter)
 				.pipe(iconv.encodeStream(SHIFT_JIS))
 				.pipe(writer);
 		}
+
 		var references = getShiftJISBufferTestData();
-		var keys = Object.keys(references);
-		keys.forEach(function (key1) {
-			keys.forEach(function(key2) {
-				it("Convert " + key2 + " to " + key1, function (done) {
-					testStream(key1, key2, references[key1], done);
+		var newlines = Object.keys(references);
+		newlines.forEach(function (toNewline) {
+			newlines.forEach(function(fromNewline) {
+				it(util.format("should convert from %s to %s", fromNewline, toNewline), function(done) {
+					testStream(toNewline, fromNewline, references[toNewline], done);
 				});
 			});
 		});
