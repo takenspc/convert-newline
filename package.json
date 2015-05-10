@@ -7,13 +7,16 @@
   "license": "MIT",
   "scripts": {
     "coverage": "istanbul cover --report html node_modules/mocha/bin/_mocha -- test.js -R spec",
-    "test": "eslint . && mocha test.js"
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint .",
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/takenspc/convert-newline.git"
   },
   "dependencies": {
+    "coveralls": "^2.11.2",
     "iconv-lite": "^0.4.8"
   },
   "devDependencies": {
@@ -22,6 +25,6 @@
     "mocha": "^2.2.4"
   },
   "engines": {
-    "iojs" : "2.0.x"
+    "iojs": "2.0.x"
   }
 }
