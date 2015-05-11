@@ -6,7 +6,7 @@ var stream = require("stream");
 var util = require("util");
 var bufferEquals = require("buffer-equals");
 var iconv = require("iconv-lite");
-var convertNewline = require("./");
+var convertNewline = require("../");
 
 //
 // const.
