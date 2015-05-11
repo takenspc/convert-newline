@@ -1,5 +1,5 @@
 "use strict";
-var assert = require("assert");
+var assert = require("power-assert");
 var fs = require("fs");
 var path = require("path");
 var stream = require("stream");

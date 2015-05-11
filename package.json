@@ -22,8 +22,11 @@
     "buffer-equals": "^1.0.3",
     "coveralls": "^2.11.2",
     "eslint": "^0.20.0",
+    "espower-loader": "^0.11.0",
+    "intelli-espower-loader": "^0.7.0",
     "istanbul": "^0.3.13",
-    "mocha": "^2.2.4"
+    "mocha": "^2.2.4",
+    "power-assert": "^0.11.0"
   },
   "engines": {
     "node": ">=0.10",
