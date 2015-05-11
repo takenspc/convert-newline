@@ -13,19 +13,19 @@ Unify newline characters to either `\n`,`\r\n`, or `\r`.
 var convertNewline = require("convert-newline");
 
 var converter = convertNewline("lf").string();
-converter("AAA\rBBB\r\nCCC\n"); // -> "AAA\nBBB\nCCC\n"
+converter("aaa\rbbb\r\nccc\n"); // -> "aaa\nbbb\nccc\n"
 ```
 
 ### Buffer
 
 ```js
 var convertNewline = require("convert-newline");
-var buffer = new Buffer("AAA\rBBB\r\nCCC\n");
+var buffer = new Buffer("aaa\rbbb\r\nccc\n");
 
 var converter = convertNewline("lf").buffer();
 var newBuffer = converter(buffer);
 
-newBuffer.toString(); // -> "AAA\nBBB\nCCC\n"
+newBuffer.toString(); // -> "aaa\nbbb\nccc\n"
 ```
 
 Converting non-utf8 encoded buffers is supported.

@@ -2,6 +2,7 @@
 var assert = require("assert");
 var fs = require("fs");
 var path = require("path");
+var stream = require("stream");
 var util = require("util");
 var iconv = require("iconv-lite");
 var convertNewline = require("./");
@@ -18,9 +19,9 @@ var SHIFT_JIS = "shift_jis";
 //
 function getStringTestData() {
 	return {
-		cr: "AAA\rBBB\rCCC\r",
-		crlf: "AAA\r\nBBB\r\nCCC\r\n",
-		lf: "AAA\nBBB\nCCC\n"
+		cr: "aaa\rbbb\rccc\r",
+		crlf: "aaa\r\nbbb\r\nccc\r\n",
+		lf: "aaa\nbbb\nccc\n"
 	};
 }
 
@@ -35,9 +36,9 @@ function getUTF8FileTestData() {
 
 function getUTF8BufferTestData() {
 	return {
-		cr: new Buffer("AAA\rBBB\rCCC\r"),
-		crlf: new Buffer("AAA\r\nBBB\r\nCCC\r\n"),
-		lf: new Buffer("AAA\nBBB\nCCC\n")
+		cr: new Buffer("aaa\rbbb\rccc\r"),
+		crlf: new Buffer("aaa\r\nbbb\r\nccc\r\n"),
+		lf: new Buffer("aaa\nbbb\nccc\n")
 	};
 }
 
