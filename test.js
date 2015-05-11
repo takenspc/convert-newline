@@ -92,8 +92,8 @@ describe(PACKAGE_NAME, function() {
 			newlinews.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
 					var converter = convertNewline(toNewline).string();
-					var reference = testData[toNewline];
-					assert.strictEqual(converter(testData[fromNewline]), reference);
+					var expected = testData[toNewline];
+					assert.strictEqual(converter(testData[fromNewline]), expected);
 				});
 			});
 		});
@@ -106,8 +106,8 @@ describe(PACKAGE_NAME, function() {
 			newlines.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
 					var converter = convertNewline(toNewline).buffer();
-					var reference = testData[toNewline];
-					assert.ok(bufferEquals(converter(testData[fromNewline]), reference));
+					var expected = testData[toNewline];
+					assert.ok(bufferEquals(converter(testData[fromNewline]), expected));
 				});
 			});
 		});
@@ -120,8 +120,8 @@ describe(PACKAGE_NAME, function() {
 			newlines.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
 					var converter = convertNewline(toNewline, SHIFT_JIS).buffer();
-					var reference = testData[toNewline];
-					assert.ok(bufferEquals(converter(testData[fromNewline]), reference));
+					var expected = testData[toNewline];
+					assert.ok(bufferEquals(converter(testData[fromNewline]), expected));
 				});
 			});
 		});
@@ -129,17 +129,17 @@ describe(PACKAGE_NAME, function() {
 
 	describe("test code (utf8)", function() {
 		var testData = getUTF8FileTestData();
-		var referenceData = getUTF8BufferTestData();
+		var expectedData = getUTF8BufferTestData();
 		var newlines = Object.keys(testData);
 		newlines.forEach(function(newline1) {
 			it("should load test data correctly", function() {
 				newlines.forEach(function (newline2) {
-					var target = testData[newline2];
-					var reference = referenceData[newline1];
+					var actual = testData[newline2];
+					var expected = expectedData[newline1];
 					if (newline1 === newline2) {
-						assert.ok(bufferEquals(target, reference), util.format("%s test data is loaded correctly", newline1));
+						assert.ok(bufferEquals(actual, expected), util.format("%s test data is loaded correctly", newline1));
 					} else {
-						assert.ok(!bufferEquals(target, reference), util.format("%s test data is not same as %s correctly", newline1, newline2));
+						assert.ok(!bufferEquals(actual, expected), util.format("%s test data is not same as %s correctly", newline1, newline2));
 					}
 				});
 			});
@@ -148,17 +148,17 @@ describe(PACKAGE_NAME, function() {
 
 	describe("test code (utf8)", function() {
 		var testData = getShiftJISFileTestData();
-		var referenceData = getShiftJISBufferTestData();
+		var expectedData = getShiftJISBufferTestData();
 		var newlines = Object.keys(testData);
 		newlines.forEach(function(newline1) {
 			it("should load test data correctly", function() {
 				newlines.forEach(function (newline2) {
-					var target = testData[newline2];
-					var reference = referenceData[newline1];
+					var actual = testData[newline2];
+					var expected = expectedData[newline1];
 					if (newline1 === newline2) {
-						assert.ok(bufferEquals(target, reference), util.format("%s test data is loaded correctly", newline1));
+						assert.ok(bufferEquals(actual, expected), util.format("%s test data is loaded correctly", newline1));
 					} else {
-						assert.ok(!bufferEquals(target, reference), util.format("%s test data is not same as %s correctly", newline1, newline2));
+						assert.ok(!bufferEquals(actual, expected), util.format("%s test data is not same as %s correctly", newline1, newline2));
 					}
 				});
 			});
@@ -166,7 +166,7 @@ describe(PACKAGE_NAME, function() {
 	});
 
 	describe("in stream mode (simple)", function() {
-		function testStream(toNewline, fromNewline, reference, done) {
+		function testStream(toNewline, fromNewline, expected, done) {
 			var fromFilename = path.join("data", UTF8, fromNewline + ".txt");
 			var targetFilename = fromFilename + "." + toNewline;
 			var options = {
@@ -178,8 +178,8 @@ describe(PACKAGE_NAME, function() {
 			var converter = convertNewline(toNewline).stream();
 
 			writer.on("finish", function() {
-				var target = fs.readFileSync(targetFilename);
-				assert.ok(bufferEquals(target, reference));
+				var actual = fs.readFileSync(targetFilename);
+				assert.ok(bufferEquals(actual, expected));
 				done();
 			});
 
@@ -188,12 +188,12 @@ describe(PACKAGE_NAME, function() {
 				.pipe(writer);
 		}
 
-		var references = getUTF8BufferTestData();
-		var newlines = Object.keys(references);
+		var testData = getUTF8BufferTestData();
+		var newlines = Object.keys(testData);
 		newlines.forEach(function (toNewline) {
 			newlines.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function(done) {
-					testStream(toNewline, fromNewline, references[toNewline], done);
+					testStream(toNewline, fromNewline, testData[toNewline], done);
 				});
 			});
 		});
@@ -216,12 +216,12 @@ describe(PACKAGE_NAME, function() {
 		it("should treat a sequence of \\r and \\n as a newline", function(done) {
 			var newline = "lf";
 			var converter = convertNewline(newline).stream();
-			var converted = [];
+			var actual = [];
 			converter.on("data", function (chunk) {
-				converted.push(chunk);
+				actual.push(chunk);
 			});
 			converter.on("end", function () {
-				assert.deepEqual(converted, ["aaa", "\n\nbbb", "\nccc", "\n"]);
+				assert.deepEqual(actual, ["aaa", "\n\nbbb", "\nccc", "\n"]);
 				done();
 			});
 
@@ -239,7 +239,7 @@ describe(PACKAGE_NAME, function() {
 	});
 
 	describe("in stream mode (iconv)", function() {
-		function testStream(toNewline, fromNewline, reference, done) {
+		function testStream(toNewline, fromNewline, expected, done) {
 			var fromFilename = path.join("data", SHIFT_JIS, fromNewline + ".txt");
 			var targetFilename = fromFilename + "." + toNewline;
 
@@ -248,8 +248,8 @@ describe(PACKAGE_NAME, function() {
 			var converter = convertNewline(toNewline).stream();
 
 			writer.on("finish", function() {
-				var target = fs.readFileSync(targetFilename);
-				assert.ok(bufferEquals(target, reference));
+				var actual = fs.readFileSync(targetFilename);
+				assert.ok(bufferEquals(actual, expected));
 				done();
 			});
 
@@ -260,12 +260,12 @@ describe(PACKAGE_NAME, function() {
 				.pipe(writer);
 		}
 
-		var references = getShiftJISBufferTestData();
-		var newlines = Object.keys(references);
+		var testData = getShiftJISBufferTestData();
+		var newlines = Object.keys(testData);
 		newlines.forEach(function (toNewline) {
 			newlines.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function(done) {
-					testStream(toNewline, fromNewline, references[toNewline], done);
+					testStream(toNewline, fromNewline, testData[toNewline], done);
 				});
 			});
 		});
