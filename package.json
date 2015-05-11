@@ -19,12 +19,14 @@
     "iconv-lite": "^0.4.8"
   },
   "devDependencies": {
+    "buffer-equals": "^1.0.3",
     "coveralls": "^2.11.2",
     "eslint": "^0.20.0",
     "istanbul": "^0.3.13",
     "mocha": "^2.2.4"
   },
   "engines": {
-    "iojs": "2.0.x"
+    "node": ">=0.10",
+    "iojs": ">=2.0"
   }
 }

@@ -4,6 +4,7 @@ var fs = require("fs");
 var path = require("path");
 var stream = require("stream");
 var util = require("util");
+var bufferEquals = require("buffer-equals");
 var iconv = require("iconv-lite");
 var convertNewline = require("./");
 
@@ -106,7 +107,7 @@ describe(PACKAGE_NAME, function() {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
 					var converter = convertNewline(toNewline).buffer();
 					var reference = testData[toNewline];
-					assert.ok(reference.equals(converter(testData[fromNewline])));
+					assert.ok(bufferEquals(converter(testData[fromNewline]), reference));
 				});
 			});
 		});
@@ -120,7 +121,7 @@ describe(PACKAGE_NAME, function() {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function() {
 					var converter = convertNewline(toNewline, SHIFT_JIS).buffer();
 					var reference = testData[toNewline];
-					assert.ok(reference.equals(converter(testData[fromNewline])));
+					assert.ok(bufferEquals(converter(testData[fromNewline]), reference));
 				});
 			});
 		});
@@ -136,9 +137,9 @@ describe(PACKAGE_NAME, function() {
 					var target = testData[newline2];
 					var reference = referenceData[newline1];
 					if (newline1 === newline2) {
-						assert.ok(reference.equals(target), util.format("%s test data is loaded correctly", newline1));
+						assert.ok(bufferEquals(target, reference), util.format("%s test data is loaded correctly", newline1));
 					} else {
-						assert.ok(!reference.equals(target), util.format("%s test data is not same as %s correctly", newline1, newline2));
+						assert.ok(!bufferEquals(target, reference), util.format("%s test data is not same as %s correctly", newline1, newline2));
 					}
 				});
 			});
@@ -155,9 +156,9 @@ describe(PACKAGE_NAME, function() {
 					var target = testData[newline2];
 					var reference = referenceData[newline1];
 					if (newline1 === newline2) {
-						assert.ok(reference.equals(target), util.format("%s test data is loaded correctly", newline1));
+						assert.ok(bufferEquals(target, reference), util.format("%s test data is loaded correctly", newline1));
 					} else {
-						assert.ok(!reference.equals(target), util.format("%s test data is not same as %s correctly", newline1, newline2));
+						assert.ok(!bufferEquals(target, reference), util.format("%s test data is not same as %s correctly", newline1, newline2));
 					}
 				});
 			});
@@ -178,7 +179,7 @@ describe(PACKAGE_NAME, function() {
 
 			writer.on("finish", function() {
 				var target = fs.readFileSync(targetFilename);
-				assert.ok(reference.equals(target));
+				assert.ok(bufferEquals(target, reference));
 				done();
 			});
 
@@ -220,7 +221,7 @@ describe(PACKAGE_NAME, function() {
 				converted.push(chunk);
 			});
 			converter.on("end", function () {
-				assert.deepStrictEqual(converted, ["aaa", "\n\nbbb", "\nccc", "\n"]);
+				assert.deepEqual(converted, ["aaa", "\n\nbbb", "\nccc", "\n"]);
 				done();
 			});
 
@@ -248,7 +249,7 @@ describe(PACKAGE_NAME, function() {
 
 			writer.on("finish", function() {
 				var target = fs.readFileSync(targetFilename);
-				assert.ok(reference.equals(target));
+				assert.ok(bufferEquals(target, reference));
 				done();
 			});
 

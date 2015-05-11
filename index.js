@@ -66,7 +66,7 @@ StreamConverter.prototype._transform = function(chunk, encoding, done) {
 			// insert CR
 			chunk = "\r" + chunk;
 		}
-		this.lastIsCr = chunk.endsWith("\r");
+		this.lastIsCr = (chunk.lastIndexOf("\r") === (chunk.length - 1));
 		if (this.lastIsCr) {
 			// strip CR
 			chunk = chunk.slice(0, -1);
