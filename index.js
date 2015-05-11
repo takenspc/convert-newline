@@ -18,8 +18,8 @@ function stringConverter(newline) {
 	var cr = /\r/g;
 	var lf = /\n/g;
 	return function(str) {
-		str = str.replace(crlf, "\n");
-		str = str.replace(cr, "\n");
+		str = str.replace(crlf, NEWLINES.lf);
+		str = str.replace(cr, NEWLINES.lf);
 		return str.replace(lf, newline);
 	};
 }
@@ -64,9 +64,9 @@ StreamConverter.prototype._transform = function(chunk, encoding, done) {
 	try {
 		if (this.lastIsCr) {
 			// insert CR
-			chunk = "\r" + chunk;
+			chunk = NEWLINES.cr + chunk;
 		}
-		this.lastIsCr = (chunk.lastIndexOf("\r") === (chunk.length - 1));
+		this.lastIsCr = (chunk.lastIndexOf(NEWLINES.cr) === (chunk.length - NEWLINES.cr.length));
 		if (this.lastIsCr) {
 			// strip CR
 			chunk = chunk.slice(0, -1);
@@ -85,7 +85,7 @@ StreamConverter.prototype._transform = function(chunk, encoding, done) {
 StreamConverter.prototype._flush = function(done) {
 	if (this.lastIsCr) {
 		// insert last CR
-		this.push(this.converter("\r"));
+		this.push(this.converter(NEWLINES.cr));
 	}
 	this.lastIsCr = false;
 	done();
