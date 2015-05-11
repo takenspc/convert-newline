@@ -6,7 +6,7 @@
   "author": "Takeshi Kurosawa <taken.spc@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- test.js -R spec",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --require intelli-espower-loader test/ -R spec",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "eslint .",
     "test": "mocha --require intelli-espower-loader test/"
