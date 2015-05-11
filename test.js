@@ -69,10 +69,19 @@ function getShiftJISBufferTestData() {
 // Tests
 //
 describe(PACKAGE_NAME, function() {
-	it("should throw for invalid args", function() {
+	it("should throw for invalid option", function() {
 		assert.throws(function() {
 			convertNewline("\n");
 		}, /Unsupported `newline`/);
+	});
+
+	it("should use \"lf\" as default option", function() {
+		var testData = getStringTestData();
+		var converter = convertNewline().string();
+		var newlinews = Object.keys(testData);
+		newlinews.forEach(function(fromNewline) {
+			assert.strictEqual(converter(testData[fromNewline]), testData.lf);
+		});
 	});
 
 	describe("in string mode", function() {
