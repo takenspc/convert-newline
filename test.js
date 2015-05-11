@@ -212,7 +212,7 @@ describe(PACKAGE_NAME, function() {
 				.pipe(converter);
 		});
 
-		it("should throw an error for non string stream", function(done) {
+		it("should treat a sequence of \\r and \\n as a newline", function(done) {
 			var newline = "lf";
 			var converter = convertNewline(newline).stream();
 			var converted = [];
