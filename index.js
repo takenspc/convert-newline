@@ -59,7 +59,7 @@ function StreamConverter(newline, options) {
 StreamConverter.prototype._transform = function(chunk, encoding, done) {
 	// TODO support buffer
 	if (typeof chunk !== "string") {
-		return done(new Error(PACKAGE_NAME + " needs string as its input."));
+		return done(new Error(util.format("%s needs string as its input.", PACKAGE_NAME)));
 	}
 	try {
 		if (this.lastIsCr) {

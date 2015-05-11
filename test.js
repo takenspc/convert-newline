@@ -68,6 +68,12 @@ function getShiftJISBufferTestData() {
 // Tests
 //
 describe(PACKAGE_NAME, function() {
+	it("should throw for invalid args", function() {
+		assert.throws(function() {
+			convertNewline("\n");
+		}, /Unsupported `newline`/);
+	});
+
 	describe("in string mode", function() {
 		var testData = getStringTestData();
 		var newlinews = Object.keys(testData);
@@ -180,6 +186,45 @@ describe(PACKAGE_NAME, function() {
 				});
 			});
 		});
+
+		it("should throw an error for non string stream", function(done) {
+			var newline = "lf";
+			var fromFilename = path.join("data", UTF8, newline + ".txt");
+			var reader = fs.createReadStream(fromFilename);
+			var converter = convertNewline(newline).stream();
+
+			converter.on("error", function (err) {
+				assert.ok(err instanceof Error);
+				assert.strictEqual(err.message, util.format("%s needs string as its input.", PACKAGE_NAME));
+				done();
+			});
+			reader
+				.pipe(converter);
+		});
+
+		it("should throw an error for non string stream", function(done) {
+			var newline = "lf";
+			var converter = convertNewline(newline).stream();
+			var converted = [];
+			converter.on("data", function (chunk) {
+				converted.push(chunk);
+			});
+			converter.on("end", function () {
+				assert.deepStrictEqual(converted, ["aaa", "\n\nbbb", "\nccc", "\n"]);
+				done();
+			});
+
+			var reader = new stream.Readable({
+				encoding: UTF8
+			});
+			["aaa\r", "\rbbb\r", "\nccc\r"].forEach(function(item) {
+				reader.push(item, UTF8);
+			});
+			reader.push(null);
+			reader
+				.pipe(converter);
+		});
+
 	});
 
 	describe("in stream mode (iconv)", function() {
