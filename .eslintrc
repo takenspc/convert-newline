@@ -1,10 +1,42 @@
 {
-	"env": {
-		"node": true,
-		"mocha": true
-	},
-
-	"rules": {
-		"no-underscore-dangle": [0]
-	}
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    "brace-style": [
+      2,
+      "1tbs"
+    ],
+    "comma-style": [
+      2,
+      "last"
+    ],
+    "dot-location": [
+      2,
+      "property"
+    ],
+    "indent": [
+      2,
+      "tab"
+    ],
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
+    "no-underscore-dangle": [
+      0
+    ],
+    "quotes": [
+      2,
+      "double"
+    ],
+    "radix": [
+      2
+    ],
+    "semi": [
+      2,
+      "always"
+    ]
+  }
 }

@@ -46,7 +46,6 @@ function bufferConverter(newline, encoding) {
 	return !encoding ? bufferConverterSimple(newline) : bufferConverterIconv(newline, encoding);
 }
 
-util.inherits(StreamConverter, stream.Transform);
 function StreamConverter(newline, options) {
 	options = options || {};
 	options.decodeStrings = false;
@@ -55,6 +54,7 @@ function StreamConverter(newline, options) {
 	this.converter = stringConverter(newline);
 	this.lastIsCr = false;
 }
+util.inherits(StreamConverter, stream.Transform);
 
 StreamConverter.prototype._transform = function(chunk, encoding, done) {
 	// TODO support buffer
@@ -76,8 +76,7 @@ StreamConverter.prototype._transform = function(chunk, encoding, done) {
 			this.push(res);
 		}
 		done();
-	}
-	catch (e) {
+	} catch (e) {
 		done(e);
 	}
 };
