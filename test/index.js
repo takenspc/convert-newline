@@ -32,7 +32,6 @@ function getUTF8FileTestData() {
 		crlf: fs.readFileSync(path.join("data", UTF8, "crlf.txt")),
 		lf: fs.readFileSync(path.join("data", UTF8, "lf.txt"))
 	};
-
 }
 
 function getUTF8BufferTestData() {
@@ -133,7 +132,7 @@ describe(PACKAGE_NAME, function() {
 		var newlines = Object.keys(testData);
 		newlines.forEach(function(newline1) {
 			it("should load test data correctly", function() {
-				newlines.forEach(function (newline2) {
+				newlines.forEach(function(newline2) {
 					var actual = testData[newline2];
 					var expected = expectedData[newline1];
 					if (newline1 === newline2) {
@@ -152,7 +151,7 @@ describe(PACKAGE_NAME, function() {
 		var newlines = Object.keys(testData);
 		newlines.forEach(function(newline1) {
 			it("should load test data correctly", function() {
-				newlines.forEach(function (newline2) {
+				newlines.forEach(function(newline2) {
 					var actual = testData[newline2];
 					var expected = expectedData[newline1];
 					if (newline1 === newline2) {
@@ -190,7 +189,7 @@ describe(PACKAGE_NAME, function() {
 
 		var testData = getUTF8BufferTestData();
 		var newlines = Object.keys(testData);
-		newlines.forEach(function (toNewline) {
+		newlines.forEach(function(toNewline) {
 			newlines.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function(done) {
 					testStream(toNewline, fromNewline, testData[toNewline], done);
@@ -204,7 +203,7 @@ describe(PACKAGE_NAME, function() {
 			var reader = fs.createReadStream(fromFilename);
 			var converter = convertNewline(newline).stream();
 
-			converter.on("error", function (err) {
+			converter.on("error", function(err) {
 				assert.ok(err instanceof Error);
 				assert.strictEqual(err.message, util.format("%s needs string as its input.", PACKAGE_NAME));
 				done();
@@ -217,10 +216,10 @@ describe(PACKAGE_NAME, function() {
 			var newline = "lf";
 			var converter = convertNewline(newline).stream();
 			var actual = [];
-			converter.on("data", function (chunk) {
+			converter.on("data", function(chunk) {
 				actual.push(chunk);
 			});
-			converter.on("end", function () {
+			converter.on("end", function() {
 				assert.deepEqual(actual, ["aaa", "\n\nbbb", "\nccc", "\n"]);
 				done();
 			});
@@ -235,7 +234,6 @@ describe(PACKAGE_NAME, function() {
 			reader
 				.pipe(converter);
 		});
-
 	});
 
 	describe("in stream mode (iconv)", function() {
@@ -262,7 +260,7 @@ describe(PACKAGE_NAME, function() {
 
 		var testData = getShiftJISBufferTestData();
 		var newlines = Object.keys(testData);
-		newlines.forEach(function (toNewline) {
+		newlines.forEach(function(toNewline) {
 			newlines.forEach(function(fromNewline) {
 				it(util.format("should convert from %s to %s", fromNewline, toNewline), function(done) {
 					testStream(toNewline, fromNewline, testData[toNewline], done);
