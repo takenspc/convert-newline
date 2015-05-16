@@ -48,7 +48,9 @@ iconv.decode(newBuffer, "shift_jis"); // -> "あ\nい\nう\n"
 ```js
 var fs = require("fs");
 var convertNewline = require("convert-newline");
-var reader = fs.createReadStream("foo.txt", { encoding: "utf8" });
+var reader = fs.createReadStream("foo.txt", {
+	encoding: "utf8"
+});
 var writer = fs.createWriteStream("bar.txt");
 
 var converter = convertNewline("lf").stream();
