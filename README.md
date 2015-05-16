@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/takenspc/convert-newline.svg?branch=master)](https://travis-ci.org/takenspc/convert-newline)
 [![Build status](https://ci.appveyor.com/api/projects/status/x4ks2y09jcjfvgw8/branch/master?svg=true)](https://ci.appveyor.com/project/takenspc/convert-newline/branch/master)
 [![Coverage Status](https://coveralls.io/repos/takenspc/convert-newline/badge.svg?branch=master)](https://coveralls.io/r/takenspc/convert-newline?branch=master)
+[![Code Climate](https://codeclimate.com/github/takenspc/convert-newline/badges/gpa.svg)](https://codeclimate.com/github/takenspc/convert-newline)
 
 Unify newline characters to either `\n`,`\r\n`, or `\r`.
 
